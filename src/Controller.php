@@ -26,6 +26,9 @@ class Controller extends BaseController
     /** @var string $strController The current controller. */
     protected $strController = '';
 
+    /** @var string $strControllerNamespace The default controller namespace. */
+    protected $strControllerNamespace = 'App\Http\Controllers\\';
+
     /** @var string $strViewScript Allows child classes to override the standard view script mapping. */
     protected $strViewScript;
 
@@ -70,8 +73,7 @@ class Controller extends BaseController
             '.',
             snake_case(
                 // Remove fluff from classname
-                // @TODO
-                str_replace(['App\Http\Controllers\\', 'Controller'], '', get_class($this)),
+                str_replace([$this->strControllerNamespace, 'Controller'], '', get_class($this)),
                 $strDelimeter
             )
         );
@@ -92,7 +94,7 @@ class Controller extends BaseController
                 $this->strViewScript = $this->strController . '.' . $this->strAction;
 
             $this->layout = View::make($this->strViewScript, [
-                'bGuestHome' => ('App\Http\Controllers\IndexController' == get_class($this) && 'getIndex' == $strMethod),
+                'bGuestHome' => ($this->strControllerNamespace . 'IndexController' === get_class($this) && 'getIndex' == $strMethod),
                 'strModule' => $this->strController,
                 'strAction' => $this->strAction,
             ]);

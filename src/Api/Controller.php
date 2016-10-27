@@ -22,17 +22,23 @@ class Controller extends BaseController
     /** @var bool $bReturnsArray Does the current action return a data array? */
     protected $bReturnsArray = true;
 
-    /** @var string $strResourceType The type of resource we're dealing with (User, Campus, etc.) */
-    protected $strResourceType = '';
-
     /** @var string $strMethod The method being called. */
     protected $strMethod = '';
 
     /** @var string $strModel The fully-qualified model class name. */
     protected $strModel = '';
 
+    /** @var string $strModelNamespace The default model namespace. */
+    protected $strModelNamespace = '\App\Model\\';
+
     /** @var string $strRedirect Optional custom redirect URL. */
     protected $strRedirect = '';
+
+    /** @var string $strResourceType The type of resource we're dealing with (User, Campus, etc.) */
+    protected $strResourceType = '';
+
+    /** @var string $strRoutePrefix The route name prefix used for the API. */
+    protected $strRoutePrefix = 'api.';
 
     /**
      * Extends parent::callAction()
@@ -77,10 +83,10 @@ class Controller extends BaseController
     /** @return mixed General setup for the whole controller. */
     protected function general()
     {
-        // @TODO
-        $this->strResourceType = studly_case(str_replace('api.', '', $this->strController));
-        // @TODO
-        $this->strModel = '\App\Model\\' . $this->strResourceType;
+        $this->strResourceType = studly_case(str_replace(
+            $this->strRoutePrefix, '', $this->strController
+        ));
+        $this->strModel = $this->strModelNamespace . $this->strResourceType;
         $this->processInput();
 
         if (!$this->checkPermissions())
@@ -109,10 +115,27 @@ class Controller extends BaseController
      */
     public function index()
     {
-        $strClass = $this->strModel;
+        return $this->findModel()->toArray();
+    }
 
-        // @TODO
-        return $strClass::getWithCriteria($this->aInput)->toArray();
+    /**
+     * Use the current input to find a record.
+     *
+     * Apps can override this with their custom methods of finding based on criteria.
+     *
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    protected function findModel()
+    {
+        $strClass = $this->strModel;
+        $oQuery = $strClass::query();
+
+        foreach ($this->aInput as $strKey => $mValue) {
+            $strWhere = is_array($mValue) ? 'whereIn' : 'where';
+            $oQuery->$strWhere($strKey, $mValue);
+        }
+
+        return $oQuery->first();
     }
 
     /**
@@ -136,14 +159,27 @@ class Controller extends BaseController
     {
         $strClass = $this->strModel;
 
-        // @TODO
-        $this->validate(request(), $strClass::getValidationRules($this->aInput));
+        $this->validate(request(), $this->getValidationRules());
 
         // Create
         $oModel = new $strClass($this->aInput);
         return $oModel->save()
             ? ['success' => ucfirst($this->readableResourceType()) . ' created successfully.']
             : ['error' => 'There was a problem saving the ' . $this->readableResourceType() . '.'];
+    }
+
+    /**
+     * Get validation rules for the current model.
+     *
+     * Apps can override this with their custom validation rules.
+     *
+     * @return array
+     */
+    protected function getValidationRules()
+    {
+        $strClass = $this->strModel;
+
+        return $strClass::$rules;
     }
 
     /**
@@ -158,12 +194,10 @@ class Controller extends BaseController
         $strClass = $this->strModel;
 
         $this->aInput['id'] = $id;
-        // @TODO
-        $this->validate(request(), $strClass::getValidationRules($this->aInput));
+        $this->validate(request(), $this->getValidationRules());
 
         $oModel = $strClass::find($id);
-        // @TODO
-        if ($oModel->isEditable()) {
+        if ($this->canEdit($oModel)) {
             $this->fillModel($oModel);
 
             $aReturn = $oModel->push()
@@ -180,6 +214,18 @@ class Controller extends BaseController
     }
 
     /**
+     * Check if the current User can edit the given model.
+     *
+     * Apps can override this with their custom permission checks.
+     *
+     * @return bool
+     */
+    protected function canEdit(Model $oModel)
+    {
+        return true;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function buildFailedValidationResponse(Request $request, array $errors)
@@ -193,10 +239,17 @@ class Controller extends BaseController
     /** @return bool Authorize the current User for this action. */
     protected function checkPermissions()
     {
+        // @TODO IS THIS A DUPE OF canEdit()?
         return true;
     }
 
-    /** @param Illuminate\Database\Eloquent\Model $oModel Fill the model with input. */
+    /**
+     * Fill the model with the input.
+     *
+     * Controllers can override this with custom fill logic.
+     *
+     * @param Illuminate\Database\Eloquent\Model $oModel
+     */
     protected function fillModel(Model $oModel)
     {
         $oModel->fill($this->aInput);
@@ -209,7 +262,7 @@ class Controller extends BaseController
             $this->aInput = request()->except('_token');
 
             if ($this->bInjectUserId)
-                $this->aInput['user_id'] = \Auth::user()->id;
+                $this->aInput['user_id'] = Auth::user()->id;
         }
         $this->sanitize();
         request()->replace($this->aInput); // @todo IS THIS NECESSARY?
@@ -218,6 +271,7 @@ class Controller extends BaseController
     /** @return string Human-readable version of the resource type. */
     protected function readableResourceType()
     {
+        // @TODO EXPLAIN THIS IN THE README
         return str_replace('_', ' ', snake_case($this->strResourceType));
     }
 
