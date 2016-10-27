@@ -1,0 +1,25 @@
+{
+    "name": "mopo922/laravel-traffic-controllers",
+    "type": "library",
+    "description": "A set of multi-purpose base controllers for Laravel 5.",
+    "keywords": ["laravel","l5","controllers","web","api"],
+    "homepage": "https://github.com/mopo922/LaravelTrafficControllers",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mark Potter",
+            "homepage": "https://github.com/mopo922"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "laravel/framework": "~5.1"
+    },
+    "autoload": {
+        "psr-4" : {
+            "LaravelTraffic\\" : "src"
+        }
+    }
+}
