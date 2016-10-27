@@ -6,6 +6,7 @@ use LaravelTraffic\Controller as BaseController;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Auth;
 
 class Controller extends BaseController
 {
@@ -76,7 +77,9 @@ class Controller extends BaseController
     /** @return mixed General setup for the whole controller. */
     protected function general()
     {
+        // @TODO
         $this->strResourceType = studly_case(str_replace('api.', '', $this->strController));
+        // @TODO
         $this->strModel = '\App\Model\\' . $this->strResourceType;
         $this->processInput();
 
@@ -240,7 +243,7 @@ class Controller extends BaseController
         }
 
         if ($this->bInjectUserId && 'index' !== $this->strMethod)
-            $aRules['user_id'] = 'required|in:' . \Auth::id();
+            $aRules['user_id'] = 'required|in:' . Auth::id();
 
         parent::validate($oRequest, $aRules, $aMessages, $aCustomAttributes);
     }

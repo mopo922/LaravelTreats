@@ -3,12 +3,17 @@
 namespace LaravelTraffic;
 
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Request;
 use View;
 
 class Controller extends BaseController
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /** @var Illuminate\View\View $layout The view object for rendering. */
     protected $layout;
 
@@ -65,6 +70,7 @@ class Controller extends BaseController
             '.',
             snake_case(
                 // Remove fluff from classname
+                // @TODO
                 str_replace(['App\Http\Controllers\\', 'Controller'], '', get_class($this)),
                 $strDelimeter
             )
@@ -81,12 +87,7 @@ class Controller extends BaseController
         ));
 
         // Create default view mapping
-        if (Request::isMethod('get')
-            /*&& !Request::ajax() */
-            && 0 !== strpos($this->strController, 'auth.')
-            && !in_array($this->strAction, $this->aViewless)
-            && strpos($this->strController, 'api') !== 0
-        ) {
+        if ($this->usesDefaultViewMapping()) {
             if (!$this->strViewScript)
                 $this->strViewScript = $this->strController . '.' . $this->strAction;
 
@@ -96,5 +97,15 @@ class Controller extends BaseController
                 'strAction' => $this->strAction,
             ]);
         }
+    }
+
+    /** @return bool Should this Controller use the default view mapping? */
+    protected function usesDefaultViewMapping()
+    {
+        return Request::isMethod('get')
+            // && !Request::ajax()
+            && 0 !== strpos($this->strController, 'auth.')
+            && !in_array($this->strAction, $this->aViewless)
+            && strpos($this->strController, 'api') !== 0;
     }
 }
