@@ -213,13 +213,7 @@ class Controller extends BaseController
         return $aReturn;
     }
 
-    /**
-     * Check if the current User can edit the given model.
-     *
-     * Apps can override this with their custom permission checks.
-     *
-     * @return bool
-     */
+    /** @return bool Check if the current User can edit the given model. */
     protected function canEdit(Model $oModel)
     {
         return true;
@@ -239,7 +233,6 @@ class Controller extends BaseController
     /** @return bool Authorize the current User for this action. */
     protected function checkPermissions()
     {
-        // @TODO IS THIS A DUPE OF canEdit()?
         return true;
     }
 
