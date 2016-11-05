@@ -86,7 +86,8 @@ class Controller extends BaseController
         $this->strResourceType = studly_case(str_replace(
             $this->strRoutePrefix, '', $this->strController
         ));
-        $this->strModel = $this->strModelNamespace . $this->strResourceType;
+        if (!$this->strModel)
+            $this->strModel = $this->strModelNamespace . $this->strResourceType;
         $this->processInput();
 
         if (!$this->checkPermissions())
