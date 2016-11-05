@@ -15,7 +15,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
     protected $autofillRelationships = [];
 
     /** @var array $autofilledRelations Current relations that have been autofilled. */
-    private $autofilledRelations = [];
+    protected $autofilledRelations = [];
 
     /**
      * Set a given attribute on the model.
@@ -30,13 +30,26 @@ class Model extends \Illuminate\Database\Eloquent\Model
     public function setAttribute($key, $value)
     {
         if (in_array($key, $this->autofillRelationships)) {
-            $value = (array)$value;
-
             $this->autofilledRelations[$key] = $value;
             return $this;
         } else {
             return parent::setAttribute($key, $value);
         }
+    }
+
+    /**
+     * Prepare the input for auto sync.
+     *
+     * This method can be overriden by the child class in order to set up the
+     * value(s) for sync(). For example, to format the array in order to pass
+     * pivot table values, like [1 => ['expires' => true], 2, 3]
+     *
+     * @param  mixed $value
+     * @return mixed $value
+     */
+    protected function prepForSync($value)
+    {
+        return $value;
     }
 
     /**
@@ -54,7 +67,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
             foreach ($this->autofilledRelations as $relationship => $relations) {
                 if (!empty($relations)) {
-                    $this->$relationship()->sync($relations);
+                    $this->$relationship()->sync((array)$this->prepForSync($relations));
                 }
             }
 
