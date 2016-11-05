@@ -21,3 +21,4 @@ Then run `composer update`. That's it!
 ## Components
 
 * [Controllers](Controller)
+* [Eloquent Models](Model)
