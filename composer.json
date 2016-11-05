@@ -1,9 +1,9 @@
 {
-    "name": "mopo922/laravel-traffic-controllers",
+    "name": "mopo922/laravel-treats",
     "type": "library",
-    "description": "A set of multi-purpose base controllers for Laravel 5.",
-    "keywords": ["laravel","l5","controllers","web","api"],
-    "homepage": "https://github.com/mopo922/LaravelTrafficControllers",
+    "description": "A collection of goodies for Laravel 5.",
+    "keywords": ["laravel","l5","controllers","web","api","eloquent","models"],
+    "homepage": "https://github.com/mopo922/LaravelTreats",
     "license": "MIT",
     "authors": [
         {
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4" : {
-            "LaravelTraffic\\" : "src"
+            "LaravelTreats\\" : "src"
         }
     }
 }

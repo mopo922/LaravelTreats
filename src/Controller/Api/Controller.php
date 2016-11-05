@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelTraffic\Api;
+namespace LaravelTreats\Controller\Api;
 
-use LaravelTraffic\Controller as BaseController;
+use LaravelTreats\Controller\Controller as BaseController;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
