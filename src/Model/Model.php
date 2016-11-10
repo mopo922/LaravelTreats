@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Model extends \Illuminate\Database\Eloquent\Model
 {
     /** @var array $rules Validation rules for model data. */
-    protected static $rules = [];
+    public static $rules = [];
 
     /** @var array $autofillRelationships List of many-to-many relationships that can be autofilled. */
     protected $autofillRelationships = [];
