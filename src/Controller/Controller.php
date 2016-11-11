@@ -17,6 +17,9 @@ class Controller extends BaseController
     /** @var Illuminate\View\View $layout The view object for rendering. */
     protected $layout;
 
+    /** @var array $aModules The general modules available on the site. */
+    protected $aModules = [];
+
     /** @var array $aViewless Actions with no view script. */
     protected $aViewless = [];
 
@@ -98,6 +101,10 @@ class Controller extends BaseController
                 'strModule' => $this->strController,
                 'strAction' => $this->strAction,
             ]);
+
+            if (!empty($this->aModules)) {
+                $this->layout->aModules = $this->aModules;
+            }
         }
     }
 

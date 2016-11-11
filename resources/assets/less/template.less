@@ -1,0 +1,221 @@
+/**
+ * Header & Nav
+ */
+header {
+    .navbar;
+    .navbar-default;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    margin-bottom: 0;
+    background: @brand-primary;
+    border: none;
+    border-radius: 0 !important;
+    border-bottom: 2px solid @brand-secondary;
+    color: @white;
+
+    .logo {
+        float: left;
+        margin: 5px 0;
+        text-decoration: none;
+    }
+    .navbar-header {
+
+        > a {
+            display: inline-block;
+            margin: 5px 0;
+        }
+    }
+    .navbar-nav {
+        > form {
+            > a {
+                color: @gray-lighter;
+                margin-right: 68px;
+
+                &:active,
+                &:focus,
+                &:hover {
+                    color: @white;
+                    text-decoration: none;
+                }
+            }
+        }
+        > li {
+            &.open {
+                > a, > a:hover, > a:focus {
+                    background: @white;
+                }
+                > .dropdown-menu {
+                    background: @white;
+                }
+            }
+            > a {
+                &, &:focus {
+                    color: @white;
+                }
+                &:hover {
+                    color: @gray-light;
+                }
+            }
+        }
+        .dropdown-menu {
+            width: 300px;
+            padding: 10px;
+            border: none;
+            color: @gray;
+        }
+    }
+}
+nav.subnav {
+    position: fixed;
+    top: @navbar-height + 2; // extra 2 for bottom border of header
+    z-index: 900;
+    width: 100%;
+    height: @subnav-height + @grid-gutter-width/2;
+
+    // The following styles are needed to adapt to a solid-background nav-tabs layout
+    background: @gray-light;
+    border-bottom: @grid-gutter-width/2 solid @nav-tabs-active-link-hover-bg;
+    border-radius: 0 !important;
+
+    .nav-tabs.nav-justified > li {
+        & > a {
+            border-bottom-color: @gray-light; // .subnav background color
+        }
+        & > a:hover {
+            border-bottom-color: @nav-tabs-link-hover-border-color;
+        }
+        &.active > a {
+            border-bottom-color: @nav-tabs-active-link-hover-bg;
+        }
+    }
+}
+.subnav-buffer {
+    height: @subnav-height + @grid-gutter-width/2;
+}
+@media (min-width: @grid-float-breakpoint) {
+    #cu-subnav-toggle {
+        display: none;
+    }
+}
+@media (max-width: @grid-float-breakpoint) {
+    #cu-subnav-toggle {
+        background: @gray-light;
+    }
+    nav.subnav {
+        .collapse;
+        top: @navbar-height + 2 + 32px;
+        height: auto;
+
+        .nav-tabs.nav-justified > li:first-child {
+            display: none;
+        }
+    }
+    .subnav-buffer {
+        display: none;
+    }
+}
+
+/**
+ * Modal
+ */
+.modal {
+    .checkbox.row {
+        h1, h2, h3, h4 {
+            padding-left: @grid-gutter-width/2;
+            padding-right: @grid-gutter-width/2;
+        }
+        label {
+            .make-sm-column(6);
+            padding-left: 20px + @grid-gutter-width/2;
+        }
+    }
+}
+
+/**
+ * Index parallax
+ */
+body {
+    position: relative;
+
+    > img {
+        position: fixed;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        min-width: 100%;
+        min-height: 100%;
+    }
+}
+.index-transparent {
+    position: relative;
+    background: none;
+    color: @white;
+    text-shadow: 2px 2px 3px @gray;
+
+    h1 {
+        font-size: 36px;
+    }
+    .well {
+        text-shadow: none;
+        color: @text-color;
+    }
+}
+.outer-container {
+    .row;
+
+    @media (max-width: @grid-float-breakpoint) {
+        & {
+            margin: 0;
+        }
+    }
+    width: 100%;
+    padding: @grid-gutter-width/2 0;
+}
+
+/**
+ * Sticky Footer & header
+ */
+html, body {
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+}
+#body {
+    width: 100%; // not related to footer
+    min-height: 100%;
+    margin-bottom: -100px;
+    padding-top: @navbar-height + 2; // for header
+
+    &:after {
+        display: block;
+        content: "";
+    }
+}
+footer, #body:after {
+    height: 100px;
+}
+footer {
+    clear: both;
+    background: @gray-lighter;
+    text-align: center;
+
+    > .container {
+        padding: 24px 0;
+    }
+}
+
+/**
+ * Misc
+ */
+a.active {
+    color: @link-hover-color;
+    text-decoration: underline;
+
+    &.btn {
+        text-decoration: none;
+    }
+}
+form.form-inline {
+    display: inline-block;
+}
