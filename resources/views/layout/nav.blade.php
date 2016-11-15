@@ -12,20 +12,20 @@
 
                 @if (Auth::check())
                 <li class="dropdown">
-                    <a id="my-account" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <a id="laravel-treats-nav" href="#" class="dropdown-toggle" data-toggle="dropdown">
                         {{ $navDropdownTitle ?? trans('LaravelTreats::layout.nav.dropdown-label') }}
                         @if (Auth::user()->firstname)
                         ({{ Auth::user()->firstname }})
                         @endif
                         <b class="caret"></b>
                     </a>
-                    <ul id="my-account-menu" class="dropdown-menu" role="menu">
+                    <ul id="laravel-treats-nav-menu" class="dropdown-menu" role="menu">
                         @include('LaravelTreats::layout.nav-links')
                     </ul>
                 </li>
                 @else
                 <br>
-                <form method="POST" action="/login" class="form-inline" role="form">
+                <form method="POST" action="{{ trans('LaravelTreats::layout.form.login.action') }}" class="form-inline" role="form">
                     {!! csrf_field() !!}
                     @if (isset($errors) && !$errors->isEmpty() && old('remember'))
                     <div class="alert alert-danger">{{ $errors->first() }}</div>

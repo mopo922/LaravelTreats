@@ -67,55 +67,6 @@ header {
         }
     }
 }
-nav.subnav {
-    position: fixed;
-    top: @navbar-height + 2; // extra 2 for bottom border of header
-    z-index: 900;
-    width: 100%;
-    height: @subnav-height + @grid-gutter-width/2;
-
-    // The following styles are needed to adapt to a solid-background nav-tabs layout
-    background: @gray-light;
-    border-bottom: @grid-gutter-width/2 solid @nav-tabs-active-link-hover-bg;
-    border-radius: 0 !important;
-
-    .nav-tabs.nav-justified > li {
-        & > a {
-            border-bottom-color: @gray-light; // .subnav background color
-        }
-        & > a:hover {
-            border-bottom-color: @nav-tabs-link-hover-border-color;
-        }
-        &.active > a {
-            border-bottom-color: @nav-tabs-active-link-hover-bg;
-        }
-    }
-}
-.subnav-buffer {
-    height: @subnav-height + @grid-gutter-width/2;
-}
-@media (min-width: @grid-float-breakpoint) {
-    #cu-subnav-toggle {
-        display: none;
-    }
-}
-@media (max-width: @grid-float-breakpoint) {
-    #cu-subnav-toggle {
-        background: @gray-light;
-    }
-    nav.subnav {
-        .collapse;
-        top: @navbar-height + 2 + 32px;
-        height: auto;
-
-        .nav-tabs.nav-justified > li:first-child {
-            display: none;
-        }
-    }
-    .subnav-buffer {
-        display: none;
-    }
-}
 
 /**
  * Modal

@@ -26,6 +26,7 @@ class LaravelTreatsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/laravel-treats.php' => config_path('laravel-treats.php'),
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-treats'),
+            __DIR__ . '/../resources/assets/less' => resource_path('assets/less'),
         ]);
     }
 

@@ -5,6 +5,7 @@ return [
     // Form field names
     'form' => [
         'login' => [
+            'action' => '/login',
             'email' => [
                 'field' => 'email',
                 'label' => 'Email Address',
@@ -26,7 +27,7 @@ return [
     'link' => [
         'forgot-password' => [
             'url' => '/password/reset',
-            'lable' => 'Forgot password?',
+            'label' => 'Forgot password?',
         ],
         'privacy' => 'Privacy Policy',
         'terms' => 'Terms of Use',
