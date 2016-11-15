@@ -43,7 +43,6 @@
                 <a class="logo" href="/">
                     <img src="/img/logo.png"> &nbsp;
                 </a>
-                @include('layout.nav-mobile')
                 @include('layout.nav')
             </div>
         </header>

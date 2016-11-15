@@ -55,6 +55,66 @@ You can also change the display name of the terms & privacy links in the transla
 ],
 ```
 
+### Navigation
+
+The default layout includes a customizable navigation menu. You can define your
+navigation links in one of two ways. First, you can use the `nav.links` array in
+the language file at `resources/lang/vendor/laravel-treats/en/layout.php`:
+
+```php
+return [
+    ...
+
+    // Navigation info
+    'nav' => [
+        'dropdown-title' => 'My Account',
+        'links' => [...],
+    ],
+```
+
+Notice that there is also a `dropdown-title` option here. This is the only place
+where you can set the label for your nav dropdown.
+
+The other way to define your navigation links is to have your controller set a
+`navLinks` variable on the view object. This approach allows you to be more dynamic
+with your navigation links:
+
+```php
+class MyController extends \LaravelTreats\Controller\Controller
+{
+
+    /** @return mixed General setup for the whole controller. */
+    protected function general()
+    {
+        $this->layout->navLinks = [...];
+```
+
+Whichever way you choose to define your nav links, it should be an associative
+array where the link is the key and the label (the text visible to the user)
+is the value:
+
+```php
+$this->layout->navLinks = [
+    '/user' => 'Edit Profile',
+    '/user/password' => 'Change Password',
+];
+```
+
+You can separate your links with dividers by simply nesting the groups in an
+indexed array:
+
+```php
+$this->layout->navLinks = [
+    [
+        '/user' => 'Edit Profile',
+        '/user/password' => 'Change Password',
+    ],
+    [
+        '/logout' => 'Logout',
+    ],
+];
+```
+
 ### Google Analytics
 
 The default view layout includes Google Analytics tracking that activates automatically

@@ -1,22 +1,44 @@
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#laravel-treats-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse" id="laravel-treats-navbar-collapse">
         <nav>
             <ul class="nav navbar-nav navbar-right">
 
                 @if (Auth::check())
                 <li class="dropdown">
                     <a id="my-account" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        My Account ({{ Auth::user()->firstname }}) <b class="caret"></b>
+                        {{ $navDropdownTitle ?? trans('LaravelTreats::layout.nav.dropdown-label') }}
+                        @if (Auth::user()->firstname)
+                        ({{ Auth::user()->firstname }})
+                        @endif
+                        <b class="caret"></b>
                     </a>
                     <ul id="my-account-menu" class="dropdown-menu" role="menu">
-                        <li>{!! HTML::link('user', 'Edit Profile') !!}</li>
-                        <li>{!! HTML::link('user/password', 'Change Password') !!}</li>
-                        <li class="divider"></li>
-                        <li>{!! HTML::link('logout', 'Logout') !!}</li>
+                        @include('LaravelTreats::layout.nav-links')
                     </ul>
                 </li>
                 @else
                 <br>
-                @include('auth.form.login')
+                <form method="POST" action="/login" class="form-inline" role="form">
+                    {!! csrf_field() !!}
+                    @if (isset($errors) && !$errors->isEmpty() && old('remember'))
+                    <div class="alert alert-danger">{{ $errors->first() }}</div>
+                    @endif
+                    <input type="hidden" name="{{ trans('LaravelTreats::layout.form.login.remember') }}" value="1">
+                    <input type="email" name="{{ trans('LaravelTreats::layout.form.login.email.field') }}" placeholder="{{ trans('LaravelTreats::layout.form.login.email.label') }}" class="form-control">
+                    <input type="password" name="{{ trans('LaravelTreats::layout.form.login.password.field') }}" placeholder="{{ trans('LaravelTreats::layout.form.login.password.label') }}" class="form-control">
+                    <input type="submit" class="btn btn-info" value="{{ trans('LaravelTreats::layout.form.login.submit.label') }}">
+                    <br>
+                    <a class="pull-right" href="{{ trans('LaravelTreats::layout.link.forgot-password.url') }}">
+                        {{ trans('LaravelTreats::layout.link.forgot-password.label') }}
+                    </a>
+                </form>
                 @endif
 
             </ul>
