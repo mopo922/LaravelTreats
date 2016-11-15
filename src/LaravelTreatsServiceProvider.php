@@ -18,7 +18,7 @@ class LaravelTreatsServiceProvider extends ServiceProvider
         }
 
         // Translations
-        $this->loadTranslationsFrom(resource_path('lang/vendor/laravel-treats', 'LaravelTreats');
+        $this->loadTranslationsFrom(resource_path('lang/vendor/laravel-treats', 'LaravelTreats'));
 
         // Views
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'LaravelTreats');
