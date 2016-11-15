@@ -30,7 +30,7 @@
                     @if (isset($errors) && !$errors->isEmpty() && old('remember'))
                     <div class="alert alert-danger">{{ $errors->first() }}</div>
                     @endif
-                    <input type="hidden" name="{{ trans('LaravelTreats::layout.form.login.remember') }}" value="1">
+                    <input type="hidden" name="{{ trans('LaravelTreats::layout.form.login.remember.field') }}" value="1">
                     <input type="email" name="{{ trans('LaravelTreats::layout.form.login.email.field') }}" placeholder="{{ trans('LaravelTreats::layout.form.login.email.label') }}" class="form-control">
                     <input type="password" name="{{ trans('LaravelTreats::layout.form.login.password.field') }}" placeholder="{{ trans('LaravelTreats::layout.form.login.password.label') }}" class="form-control">
                     <input type="submit" class="btn btn-info" value="{{ trans('LaravelTreats::layout.form.login.submit.label') }}">
