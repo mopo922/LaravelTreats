@@ -43,7 +43,7 @@
                 <a class="logo" href="/">
                     <img src="/img/logo.png"> &nbsp;
                 </a>
-                @include('layout.nav')
+                @include('LaravelTreats::layout.nav')
             </div>
         </header>
         @if ($__env->yieldContent('subnav'))
