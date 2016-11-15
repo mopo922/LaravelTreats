@@ -93,8 +93,7 @@ class Controller extends BaseController
 
         // Create default view mapping
         if ($this->usesDefaultViewMapping()) {
-            if (!$this->strViewScript)
-                $this->strViewScript = $this->strController . '.' . $this->strAction;
+            $this->setViewScript();
 
             $this->layout = View::make($this->strViewScript, [
                 'bGuestHome' => ($this->strControllerNamespace . 'IndexController' === get_class($this) && 'getIndex' == $strMethod),
@@ -106,6 +105,13 @@ class Controller extends BaseController
                 $this->layout->aModules = $this->aModules;
             }
         }
+    }
+
+    /** Set the view script. Used by child classes to perform custom view mapping. */
+    protected function setViewScript()
+    {
+        if (!$this->strViewScript)
+            $this->strViewScript = $this->strController . '.' . $this->strAction;
     }
 
     /** @return bool Should this Controller use the default view mapping? */

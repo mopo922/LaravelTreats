@@ -4,22 +4,17 @@ namespace LaravelTreats\Controller;
 
 class TermsController extends Controller
 {
-    /**
-     * Setup the layout used by the controller.
-     *
-     * @param string $strMethod
-     */
-    protected function setupLayout(string $strMethod)
+    /** Set the view script. Used by child classes to perform custom view mapping. */
+    protected function setViewScript()
     {
         $this->strViewScript = 'LaravelTreats::terms.' . $this->strAction;
-        parent::setupLayout($strMethod);
     }
 
     /**  */
     public function general()
     {
-        $this->layout->domain = config('LaravelTreats::layout.site.domain');
-        $this->layout->siteName = config('LaravelTreats::layout.site.name');
+        $this->layout->domain = trans('LaravelTreats::layout.site.domain');
+        $this->layout->siteName = trans('LaravelTreats::layout.site.name');
     }
 
     /** Terms of Use */
