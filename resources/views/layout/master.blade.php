@@ -19,12 +19,12 @@
 
     <!-- Styles -->
     <link href="/css/styles.css?v=0.0" rel="stylesheet" type="text/css">
-    <link href="/css/bootstrap.vertical-tabs.min.css" rel="stylesheet" type="text/css">
     <style>
         body {
             font-family: 'Lato';
         }
     </style>
+    @yield('styles')
 
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
