@@ -58,8 +58,9 @@ You can also change the display name of the terms & privacy links in the transla
 ### Navigation
 
 The default layout includes a customizable navigation menu. You can define your
-navigation links in one of two ways. First, you can use the `nav.links` array in
-the language file at `resources/lang/vendor/laravel-treats/en/layout.php`:
+navigation links in one of two ways. First, use the `nav.links` array in the
+language file at `resources/lang/vendor/laravel-treats/en/layout.php` to set up
+a default list of links:
 
 ```php
 return [
@@ -75,9 +76,9 @@ return [
 Notice that there is also a `dropdown-title` option here. This is the only place
 where you can set the label for your nav dropdown.
 
-The other way to define your navigation links is to have your controller set a
-`navLinks` variable on the view object. This approach allows you to be more dynamic
-with your navigation links:
+Once you've define your default navigation links in the language file, you can
+dynamically override the defaults by setting a `navLinks` variable on the view
+object from your controller:
 
 ```php
 class MyController extends \LaravelTreats\Controller\Controller
