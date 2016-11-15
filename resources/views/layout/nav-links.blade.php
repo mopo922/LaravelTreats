@@ -8,7 +8,7 @@ if (!isset($ltSections[0])) {
 ?>
     @foreach ($ltSections as $ltLinks)
         @foreach ($ltLinks as $ltHref => $ltLabel)
-        <li><a href="{{ $ltHref }}">{{ $ltLabel }}</li>
+        <li><a href="{{ $ltHref }}">{{ $ltLabel }}</a></li>
         @endforeach
 
         @if (!$loop->last)
