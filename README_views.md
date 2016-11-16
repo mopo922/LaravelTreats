@@ -143,7 +143,7 @@ Blade view script:
 
 The second parameter defines the prefix to all subnav links.
 
-Next, add a `$aModules` array property to the corresponding controller with the
+Next, add a `$modules` array property to the corresponding controller with the
 list of links for your subnav. These values represent the last part of the URI
 for each link, and the view automatically capitalizes the first letter of each word
 for display.
@@ -151,8 +151,8 @@ for display.
 ```php
 class MyController extends \LaravelTreats\Controller\Controller
 {
-    /** @var array $aModules The general modules available on the site. */
-    protected $aModules = [
+    /** @var array $modules The general modules available on the site. */
+    protected $modules = [
         'home',
         'about',
         'contact',
@@ -163,7 +163,7 @@ If you'd like to customize this behavior, you can pass the display text or HTML
 as the key, and the link as the value:
 
 ```php
-    protected $aModules = [
+    protected $modules = [
         '<span class="glyphicon glyphicon-home"></span>' => 'home',
         'About Us' => 'about',
         'contact',

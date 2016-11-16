@@ -17,7 +17,7 @@ class MyController extends \LaravelTreats\Controller\Controller
 ```
 
 If your controllers don't use the default namespace of `App\Http\Controller`,
-specify that in a `$strControllerNamespace` property on each of your controllers
+specify that in a `$controllerNamespace` property on each of your controllers
 (or a parent, which extends `LaravelTreats\Controller\Controller` and is extended by all
 of your controllers):
 
@@ -25,8 +25,8 @@ of your controllers):
 class MyController extends \LaravelTreats\Controller\Controller
 {
 
-    /** @var string $strControllerNamespace The default controller namespace. */
-    protected $strControllerNamespace = 'App\Http\Controllers\\';
+    /** @var string $controllerNamespace The default controller namespace. */
+    protected $controllerNamespace = 'App\Http\Controllers\\';
 ```
 
 ## Primary Controller
@@ -60,15 +60,15 @@ scripts in a directory structure that matches the routing path. For example,
 if a user navigates to the `getIndex` action in a `HomeController`, `LaravelTreats\Controller\Controller`
 will look for a view script at `resources/views/home/index.blade.php` (or just `index.php`).
 
-You can override the default mapping by adding a `$strViewScript` property with
+You can override the default mapping by adding a `$viewScript` property with
 the desired view script path:
 
 ```php
 class MyController extends \LaravelTreats\Controller\Controller
 {
 
-    /** @var string $strViewScript Allows child classes to override the standard view script mapping. */
-    protected $strViewScript = 'custom.index';
+    /** @var string $viewScript Allows child classes to override the standard view script mapping. */
+    protected $viewScript = 'custom.index';
 ```
 
 If you need to override the standard view script path mapping in a conditional
@@ -81,28 +81,28 @@ class MyController extends \LaravelTreats\Controller\Controller
     /**
      * Extends parent::callAction()
      *
-     * @param string $strMethod
-     * @param array $aParameters
+     * @param string $method
+     * @param array $parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function callAction($strMethod, $aParameters)
+    public function callAction($method, $parameters)
     {
-        if ('index' === $strMethod)
-            $this->strViewScript = 'custom.index';
+        if ('index' === $method)
+            $this->viewScript = 'custom.index';
 
-        return parent::callAction($strMethod, $aParameters);
+        return parent::callAction($method, $parameters);
     }
 ```
 
 To exclude certain actions within the controller from standard view setup, simply
-add them to an `$aViewless` property on the controller:
+add them to an `$viewless` property on the controller:
 
 ```php
 class MyController extends \LaravelTreats\Controller\Controller
 {
 
-    /** @var array $aViewless Actions with no view script. */
-    protected $aViewless = ['logout'];
+    /** @var array $viewless Actions with no view script. */
+    protected $viewless = ['logout'];
 ```
 
 ## API Controller
@@ -133,14 +133,14 @@ Route::group(['namespace' => 'Api', 'prefix' => 'api', 'as' => 'api.'], function
 ```
 
 If you choose to use a different URL route other than `/api/controllerName`, you'll
-need to specify that using the `$strRoutePrefix` property on the controller:
+need to specify that using the `$routePrefix` property on the controller:
 
 ```php
 class GroupController extends \LaravelTreats\Controller\Api\Controller
 {
 
-    /** @var string $strRoutePrefix The route name prefix used for the API. */
-    protected $strRoutePrefix = 'resource.';
+    /** @var string $routePrefix The route name prefix used for the API. */
+    protected $routePrefix = 'resource.';
 ```
 
 You now have a fully-functional REST enpoint at `example.com/api/group`!
@@ -150,51 +150,51 @@ You now have a fully-functional REST enpoint at `example.com/api/group`!
 `LaravelTreats\Controller\Api\Controller` works on the assumption that you have an Eloquent
 model whose name matches the controller name. So in the `GroupController` example
 above, an `App\Model\Group` class will be used to perform the CRUD operations.
-You can specify a custom model namespace using a `$strModelNamespace` property.
+You can specify a custom model namespace using a `$modelNamespace` property.
 
 ```php
 class GroupController extends \LaravelTreats\Controller\Api\Controller
 {
 
-    /** @var string $strModelNamespace The default model namespace. */
-    protected $strModelNamespace = '\\App\\';
+    /** @var string $modelNamespace The default model namespace. */
+    protected $modelNamespace = '\\App\\';
 ```
 
-To specify a custom model name, use a `$strModel` property on the API controller:
+To specify a custom model name, use a `$model` property on the API controller:
 
 ```php
 class GroupController extends \LaravelTreats\Controller\Api\Controller
 {
 
-    /** @var string $strModel The fully-qualified model class name. */
-    protected $strModel = '\\App\\CustomGroup';
+    /** @var string $model The fully-qualified model class name. */
+    protected $model = '\\App\\CustomGroup';
 ```
 
 ### Injecting the ID of the Current Logged-in User
 
 If you'd like `LaravelTreats\Controller\Api\Controller` to automatically inject the ID of
-the current logged-in User, simply add a $bInjectUserId property to the controller:
+the current logged-in User, simply add a $injectUserId property to the controller:
 
 ```php
 class GroupController extends \LaravelTreats\Controller\Api\Controller
 {
 
-    /** @var bool $bInjectUserId Should we inject a user_id into the input for every request? */
-    protected $bInjectUserId = true;
+    /** @var bool $injectUserId Should we inject a user_id into the input for every request? */
+    protected $injectUserId = true;
 ```
 
 ### Custom Redirect URL
 
 By default, `LaravelTreats\Controller\Api\Controller` will redirect back to the referring
 page after the API action is performed. To specify a custom redirect URL for an
-API controller, use the `$strRedirect` property:
+API controller, use the `$redirectUrl` property:
 
 ```php
 class GroupController extends \LaravelTreats\Controller\Api\Controller
 {
 
-    /** @var string $strRedirect Optional custom redirect URL. */
-    protected $strRedirect = '/home';
+    /** @var string $redirectUrl Optional custom redirect URL. */
+    protected $redirectUrl = '/home';
 ```
 
 ### Custom Lookup Logic
@@ -232,11 +232,11 @@ class GroupController extends \LaravelTreats\Controller\Api\Controller
     /**
      * Fill the model with the input.
      *
-     * @param Illuminate\Database\Eloquent\Model $oModel
+     * @param Illuminate\Database\Eloquent\Model $model
      */
-    protected function fillModel(Model $oModel)
+    protected function fillModel(Model $model)
     {
-        $oModel->fill($this->aInput);
+        $model->fill($this->input);
     }
 ```
 
@@ -256,9 +256,9 @@ class GroupController extends \LaravelTreats\Controller\Api\Controller
      */
     protected function getValidationRules()
     {
-        $strClass = $this->strModel;
+        $class = $this->model;
 
-        return $strClass::$rules;
+        return $class::$rules;
     }
 ```
 
@@ -272,7 +272,7 @@ class GroupController extends \LaravelTreats\Controller\Api\Controller
 {
 
     /** @return bool Check if the current User can edit the given model. */
-    protected function canEdit(Model $oModel)
+    protected function canEdit(Model $model)
     {
         return true;
     }
@@ -291,18 +291,3 @@ class GroupController extends \LaravelTreats\Controller\Api\Controller
         return true;
     }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

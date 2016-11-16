@@ -17,23 +17,23 @@ class Controller extends BaseController
     /** @var Illuminate\View\View $layout The view object for rendering. */
     protected $layout;
 
-    /** @var array $aModules The general modules available on the site. */
-    protected $aModules = [];
+    /** @var array $modules The general modules available on the site. */
+    protected $modules = [];
 
-    /** @var array $aViewless Actions with no view script. */
-    protected $aViewless = [];
+    /** @var array $viewless Actions with no view script. */
+    protected $viewless = [];
 
-    /** @var string $strAction The current controller action. */
-    protected $strAction = '';
+    /** @var string $action The current controller action. */
+    protected $action = '';
 
-    /** @var string $strController The current controller. */
-    protected $strController = '';
+    /** @var string $controller The current controller. */
+    protected $controller = '';
 
-    /** @var string $strControllerNamespace The default controller namespace. */
-    protected $strControllerNamespace = 'App\Http\Controllers\\';
+    /** @var string $controllerNamespace The default controller namespace. */
+    protected $controllerNamespace = 'App\Http\Controllers\\';
 
-    /** @var string $strViewScript Allows child classes to override the standard view script mapping. */
-    protected $strViewScript;
+    /** @var string $viewScript Allows child classes to override the standard view script mapping. */
+    protected $viewScript;
 
     /**
      * Extends parent::callAction()
@@ -43,48 +43,48 @@ class Controller extends BaseController
      * Any controller can define a general() method
      * for setup common to all actions.
      *
-     * @param string $strMethod
-     * @param array $aParameters
+     * @param string $method
+     * @param array $parameters
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function callAction($strMethod, $aParameters)
+    public function callAction($method, $parameters)
     {
-        $mResult = null;
-        $this->setupLayout($strMethod);
+        $result = null;
+        $this->setupLayout($method);
 
         // Call the action if $this->general() doesn't suggest otherwise
         if (method_exists($this, 'general'))
-            $mResult = $this->general();
-        if (!$mResult)
-            $mResult = parent::callAction($strMethod, $aParameters);
+            $result = $this->general();
+        if (!$result)
+            $result = parent::callAction($method, $parameters);
 
-        return isset($mResult) ? $mResult : $this->layout; // must use isset() for case of empty array in AJAX response
+        return isset($result) ? $result : $this->layout; // must use isset() for case of empty array in AJAX response
     }
 
     /**
      * Setup the layout used by the controller.
      *
-     * @param string $strMethod
+     * @param string $method
      */
-    protected function setupLayout(string $strMethod)
+    protected function setupLayout(string $method)
     {
         // Get Controller & Action names
-        $strDelimeter = '-';
-        $this->strController = str_replace(
+        $delimeter = '-';
+        $this->controller = str_replace(
             // Laravel snake_case() doesn't recognize \, so remove it
-            '\\' . $strDelimeter,
+            '\\' . $delimeter,
             '.',
             snake_case(
                 // Remove fluff from classname
-                str_replace([$this->strControllerNamespace, 'Controller'], '', get_class($this)),
-                $strDelimeter
+                str_replace([$this->controllerNamespace, 'Controller'], '', get_class($this)),
+                $delimeter
             )
         );
-        $this->strAction = strtolower(snake_case(
+        $this->action = strtolower(snake_case(
             substr(
-                $strMethod,
+                $method,
                 // Don't chop up method for API
-                strpos($this->strController, 'api') === 0
+                strpos($this->controller, 'api') === 0
                     ? 0
                     : strlen(Request::method())
             ),
@@ -95,14 +95,14 @@ class Controller extends BaseController
         if ($this->usesDefaultViewMapping()) {
             $this->setViewScript();
 
-            $this->layout = View::make($this->strViewScript, [
-                'bGuestHome' => ($this->strControllerNamespace . 'IndexController' === get_class($this) && 'getIndex' == $strMethod),
-                'strModule' => $this->strController,
-                'strAction' => $this->strAction,
+            $this->layout = View::make($this->viewScript, [
+                'guestHome' => ($this->controllerNamespace . 'IndexController' === get_class($this) && 'getIndex' == $method),
+                'module' => $this->controller,
+                'action' => $this->action,
             ]);
 
-            if (!empty($this->aModules)) {
-                $this->layout->aModules = $this->aModules;
+            if (!empty($this->modules)) {
+                $this->layout->modules = $this->modules;
             }
         }
     }
@@ -110,8 +110,8 @@ class Controller extends BaseController
     /** Set the view script. Used by child classes to perform custom view mapping. */
     protected function setViewScript()
     {
-        if (!$this->strViewScript)
-            $this->strViewScript = $this->strController . '.' . $this->strAction;
+        if (!$this->viewScript)
+            $this->viewScript = $this->controller . '.' . $this->action;
     }
 
     /** @return bool Should this Controller use the default view mapping? */
@@ -119,8 +119,8 @@ class Controller extends BaseController
     {
         return Request::isMethod('get')
             // && !Request::ajax()
-            && 0 !== strpos($this->strController, 'auth.')
-            && !in_array($this->strAction, $this->aViewless)
-            && strpos($this->strController, 'api') !== 0;
+            && 0 !== strpos($this->controller, 'auth.')
+            && !in_array($this->action, $this->viewless)
+            && strpos($this->controller, 'api') !== 0;
     }
 }

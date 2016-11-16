@@ -19,10 +19,10 @@ trait HasCompositePrimaryKey
     /**
      * Set the keys for a save update query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $oQuery
+     * @param  \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function setKeysForSaveQuery(Builder $oQuery)
+    protected function setKeysForSaveQuery(Builder $query)
     {
         foreach ($this->getKeyName() as $key) {
             if (isset($this->$key))

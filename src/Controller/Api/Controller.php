@@ -10,35 +10,35 @@ use Auth;
 
 class Controller extends BaseController
 {
-    /** @var array $aErrors A pre-validation error description. */
-    protected $aErrors;
+    /** @var array $errors A pre-validation error description. */
+    protected $errors = [];
 
-    /** @var array $aInput The user input. */
-    protected $aInput = [];
+    /** @var array $input The user input. */
+    protected $input = [];
 
-    /** @var bool $bInjectUserId Should we inject a user_id into the input for every request? */
-    protected $bInjectUserId = false;
+    /** @var bool $injectUserId Should we inject a user_id into the input for every request? */
+    protected $injectUserId = false;
 
-    /** @var bool $bReturnsArray Does the current action return a data array? */
-    protected $bReturnsArray = true;
+    /** @var bool $returnsArray Does the current action return a data array? */
+    protected $returnsArray = true;
 
-    /** @var string $strMethod The method being called. */
-    protected $strMethod = '';
+    /** @var string $method The method being called. */
+    protected $method = '';
 
-    /** @var string $strModel The fully-qualified model class name. */
-    protected $strModel = '';
+    /** @var string $model The fully-qualified model class name. */
+    protected $model = '';
 
-    /** @var string $strModelNamespace The default model namespace. */
-    protected $strModelNamespace = '\App\Model\\';
+    /** @var string $modelNamespace The default model namespace. */
+    protected $modelNamespace = '\App\Model\\';
 
-    /** @var string $strRedirect Optional custom redirect URL. */
-    protected $strRedirect = '';
+    /** @var string $redirectUrl Optional custom redirect URL. */
+    protected $redirectUrl = '';
 
-    /** @var string $strResourceType The type of resource we're dealing with (User, Campus, etc.) */
-    protected $strResourceType = '';
+    /** @var string $resourceType The type of resource we're dealing with (User, Campus, etc.) */
+    protected $resourceType = '';
 
-    /** @var string $strRoutePrefix The route name prefix used for the API. */
-    protected $strRoutePrefix = 'api.';
+    /** @var string $routePrefix The route name prefix used for the API. */
+    protected $routePrefix = 'api.';
 
     /**
      * Extends parent::callAction()
@@ -46,48 +46,48 @@ class Controller extends BaseController
      * Format API responses - JSON for AJAX requests,
      * redirect back w/ data for normal requests.
      *
-     * @param string $strMethod
-     * @param array $aParameters
+     * @param string $method
+     * @param array $parameters
      * @return string|Illuminate\Http\RedirectResponse
      */
-    public function callAction($strMethod, $aParameters)
+    public function callAction($method, $parameters)
     {
-        $oResponse = null;
-        $this->strMethod = $strMethod;
+        $response = null;
+        $this->method = $method;
 
-        $mResult = parent::callAction($strMethod, $aParameters);
+        $result = parent::callAction($method, $parameters);
 
-        if ($this->bReturnsArray) {
-            if (!is_array($mResult))
+        if ($this->returnsArray) {
+            if (!is_array($result))
                 abort(500, 'Bad API response data.');
 
             // Return JSON for AJAX requests
             if (request()->ajax()) {
-                $oResponse = response()->json($mResult);
+                $response = response()->json($result);
 
             // Return redirect-back and flash data for normal requests.
             } else {
-                $oResponse = empty($this->strRedirect) ? back() : redirect($this->strRedirect);
-                foreach ($mResult as $strKey => $mValue)
-                    $oResponse->with($strKey, $mValue);
-                if ('store' !== $strMethod || isset($mResult['error']))
-                    $oResponse->withInput();
+                $response = empty($this->redirectUrl) ? back() : redirect($this->redirectUrl);
+                foreach ($result as $key => $value)
+                    $response->with($key, $value);
+                if ('store' !== $method || isset($result['error']))
+                    $response->withInput();
             }
         } else {
-            $oResponse = $mResult;
+            $response = $result;
         }
 
-        return $oResponse;
+        return $response;
     }
 
     /** @return mixed General setup for the whole controller. */
     protected function general()
     {
-        $this->strResourceType = studly_case(str_replace(
-            $this->strRoutePrefix, '', $this->strController
+        $this->resourceType = studly_case(str_replace(
+            $this->routePrefix, '', $this->controller
         ));
-        if (!$this->strModel)
-            $this->strModel = $this->strModelNamespace . $this->strResourceType;
+        if (!$this->model)
+            $this->model = $this->modelNamespace . $this->resourceType;
         $this->processInput();
 
         if (!$this->checkPermissions())
@@ -102,9 +102,9 @@ class Controller extends BaseController
      */
     public function destroy($id)
     {
-        $strClass = $this->strModel;
+        $class = $this->model;
 
-        return $strClass::destroy($id)
+        return $class::destroy($id)
             ? ['success' => ucfirst($this->readableResourceType()) . ' removed successfully.']
             : ['error' => 'There was a problem removing the ' . $this->readableResourceType() . '.'];
     }
@@ -128,15 +128,15 @@ class Controller extends BaseController
      */
     protected function findModel()
     {
-        $strClass = $this->strModel;
-        $oQuery = $strClass::query();
+        $class = $this->model;
+        $query = $class::query();
 
-        foreach ($this->aInput as $strKey => $mValue) {
-            $strWhere = is_array($mValue) ? 'whereIn' : 'where';
-            $oQuery->$strWhere($strKey, $mValue);
+        foreach ($this->input as $key => $value) {
+            $where = is_array($value) ? 'whereIn' : 'where';
+            $query->$where($key, $value);
         }
 
-        return $oQuery->first();
+        return $query->first();
     }
 
     /**
@@ -147,8 +147,8 @@ class Controller extends BaseController
      */
     public function show($id)
     {
-        $strClass = $this->strModel;
-        return $strClass::find($id)->toArray();
+        $class = $this->model;
+        return $class::find($id)->toArray();
     }
 
     /**
@@ -158,13 +158,13 @@ class Controller extends BaseController
      */
     public function store()
     {
-        $strClass = $this->strModel;
+        $class = $this->model;
 
         $this->validate(request(), $this->getValidationRules());
 
         // Create
-        $oModel = new $strClass($this->aInput);
-        return $oModel->save()
+        $model = new $class($this->input);
+        return $model->save()
             ? ['success' => ucfirst($this->readableResourceType()) . ' created successfully.']
             : ['error' => 'There was a problem saving the ' . $this->readableResourceType() . '.'];
     }
@@ -178,9 +178,9 @@ class Controller extends BaseController
      */
     protected function getValidationRules()
     {
-        $strClass = $this->strModel;
+        $class = $this->model;
 
-        return $strClass::$rules;
+        return $class::$rules;
     }
 
     /**
@@ -191,31 +191,31 @@ class Controller extends BaseController
      */
     public function update($id)
     {
-        $aReturn = [];
-        $strClass = $this->strModel;
+        $return = [];
+        $class = $this->model;
 
-        $this->aInput['id'] = $id;
+        $this->input['id'] = $id;
         $this->validate(request(), $this->getValidationRules());
 
-        $oModel = $strClass::find($id);
-        if ($this->canEdit($oModel)) {
-            $this->fillModel($oModel);
+        $model = $class::find($id);
+        if ($this->canEdit($model)) {
+            $this->fillModel($model);
 
-            $aReturn = $oModel->push()
+            $return = $model->push()
                 ? ['success' => ucfirst($this->readableResourceType()) . ' updated successfully.']
                 : ['error' => 'There was a problem saving the ' . $this->readableResourceType() . '.'];
         } else {
-            $aReturn = [
+            $return = [
                 'error' => 'You don\'t have permission to edit this '
                     . $this->readableResourceType() . '.'
             ];
         }
 
-        return $aReturn;
+        return $return;
     }
 
     /** @return bool Check if the current User can edit the given model. */
-    protected function canEdit(Model $oModel)
+    protected function canEdit(Model $model)
     {
         return true;
     }
@@ -225,10 +225,10 @@ class Controller extends BaseController
      */
     protected function buildFailedValidationResponse(Request $request, array $errors)
     {
-        $mResponse = parent::buildFailedValidationResponse($request, $errors);
-        if (!$mResponse instanceof \Illuminate\Http\JsonResponse)
-            $mResponse->with('error', 'One or more fields is incorrect.');
-        return $mResponse;
+        $response = parent::buildFailedValidationResponse($request, $errors);
+        if (!$response instanceof \Illuminate\Http\JsonResponse)
+            $response->with('error', 'One or more fields is incorrect.');
+        return $response;
     }
 
     /** @return bool Authorize the current User for this action. */
@@ -242,31 +242,31 @@ class Controller extends BaseController
      *
      * Controllers can override this with custom fill logic.
      *
-     * @param Illuminate\Database\Eloquent\Model $oModel
+     * @param Illuminate\Database\Eloquent\Model $model
      */
-    protected function fillModel(Model $oModel)
+    protected function fillModel(Model $model)
     {
-        $oModel->fill($this->aInput);
+        $model->fill($this->input);
     }
 
     /** Retrieve, sanitize, and update the user input. */
     protected function processInput()
     {
-        if (empty($this->aInput)) {
-            $this->aInput = request()->except('_token');
+        if (empty($this->input)) {
+            $this->input = request()->except('_token');
 
-            if ($this->bInjectUserId)
-                $this->aInput['user_id'] = Auth::user()->id;
+            if ($this->injectUserId)
+                $this->input['user_id'] = Auth::user()->id;
         }
         $this->sanitize();
-        request()->replace($this->aInput); // @todo IS THIS NECESSARY?
+        request()->replace($this->input); // @todo IS THIS NECESSARY?
     }
 
     /** @return string Human-readable version of the resource type. */
     protected function readableResourceType()
     {
         // @TODO EXPLAIN THIS IN THE README
-        return str_replace('_', ' ', snake_case($this->strResourceType));
+        return str_replace('_', ' ', snake_case($this->resourceType));
     }
 
     /** Sanitize the input - overridden in child class. */
@@ -275,41 +275,41 @@ class Controller extends BaseController
     /**
      * Validate the given request with the given rules.
      *
-     * @param \Illuminate\Http\Request $oRequest
-     * @param array $aRules
-     * @param array $aMessages
-     * @param array $aCustomAttributes
+     * @param \Illuminate\Http\Request $request
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
      */
-    public function validate(Request $oRequest, array $aRules, array $aMessages = [], array $aCustomAttributes = [])
+    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
     {
         // Check for previous errors
         if ($this->hasPreValidationErrors()) {
-            $oValidator = Validator::make([], []);
-            foreach ($this->aErrors as $strField => $strError)
-                $oValidator->errors()->add($strField, $strError);
-            $this->throwValidationException($oRequest, $oValidator);
+            $validator = Validator::make([], []);
+            foreach ($this->errors as $field => $error)
+                $validator->errors()->add($field, $error);
+            $this->throwValidationException($request, $validator);
         }
 
-        if ($this->bInjectUserId && 'index' !== $this->strMethod)
-            $aRules['user_id'] = 'required|in:' . Auth::id();
+        if ($this->injectUserId && 'index' !== $this->method)
+            $rules['user_id'] = 'required|in:' . Auth::id();
 
-        parent::validate($oRequest, $aRules, $aMessages, $aCustomAttributes);
+        parent::validate($request, $rules, $messages, $customAttributes);
     }
 
     /**
      * Add a pre-validation error message.
      *
-     * @param string $strField Field name.
-     * @param string $strMessage Error message.
+     * @param string $field Field name.
+     * @param string $message Error message.
      */
-    protected function addPreValidationError(string $strField, string $strMessage)
+    protected function addPreValidationError(string $field, string $message)
     {
-        $this->aErrors[$strField] = $strMessage;
+        $this->errors[$field] = $message;
     }
 
     /** @return bool Check if we have any pre-validation errors. */
     protected function hasPreValidationErrors()
     {
-        return !empty($this->aErrors);
+        return !empty($this->errors);
     }
 }

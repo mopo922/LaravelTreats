@@ -7,7 +7,7 @@ class TermsController extends Controller
     /** Set the view script. Used by child classes to perform custom view mapping. */
     protected function setViewScript()
     {
-        $this->strViewScript = 'LaravelTreats::terms.' . $this->strAction;
+        $this->viewScript = 'LaravelTreats::terms.' . $this->action;
     }
 
     /**  */
