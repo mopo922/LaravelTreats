@@ -1,10 +1,10 @@
 	<script>
-		var aJsBeacons = [];
-        @if (isset($aBeacons))
-		@foreach ($aBeacons as $aBeacon) <?php $aBeacon['data']['_token'] = csrf_token(); ?>
-		aJsBeacons.push({
-			'url': '{{ $aBeacon['url'] }}',
-			'data': {!! json_encode($aBeacon['data']) !!},
+		var jsBeacons = [];
+        @if (isset($beacons))
+		@foreach ($beacons as $beacon) <?php $beacon['data']['_token'] = csrf_token(); ?>
+		jsBeacons.push({
+			'url': '{{ $beacon['url'] }}',
+			'data': {!! json_encode($beacon['data']) !!},
 		});
 		@endforeach
         @endif

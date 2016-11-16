@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    @if (!empty($bGuestHome))
+    @if (!empty($guestHome))
     <img src="/img/jumbotron.jpg">
     @endif
     <div id="body">
@@ -67,7 +67,7 @@
         </div>
         @endif
 
-        @if (isset($bGuestHome) && $bGuestHome)
+        @if (!empty($guestHome))
         @yield('content')
         @else
         <div class="container">
