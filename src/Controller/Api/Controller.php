@@ -214,7 +214,12 @@ class Controller extends BaseController
         return $return;
     }
 
-    /** @return bool Check if the current User can edit the given model. */
+    /**
+     * Check if the current User can edit the given model.
+     *
+     * @param Model $model The model we want to edit.
+     * @return bool
+     */
     protected function canEdit(Model $model)
     {
         return true;
