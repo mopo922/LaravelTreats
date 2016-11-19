@@ -58,8 +58,9 @@ class Controller extends BaseController
         $result = parent::callAction($method, $parameters);
 
         if ($this->returnsArray) {
-            if (!is_array($result))
+            if (!is_array($result)) {
                 abort(500, 'Bad API response data.');
+            }
 
             // Return JSON for AJAX requests
             if (request()->ajax()) {
@@ -68,10 +69,12 @@ class Controller extends BaseController
             // Return redirect-back and flash data for normal requests.
             } else {
                 $response = empty($this->redirectUrl) ? back() : redirect($this->redirectUrl);
-                foreach ($result as $key => $value)
+                foreach ($result as $key => $value) {
                     $response->with($key, $value);
-                if ('store' !== $method || isset($result['error']))
+                }
+                if ('store' !== $method || isset($result['error'])) {
                     $response->withInput();
+                }
             }
         } else {
             $response = $result;
@@ -234,8 +237,9 @@ class Controller extends BaseController
     protected function buildFailedValidationResponse(Request $request, array $errors)
     {
         $response = parent::buildFailedValidationResponse($request, $errors);
-        if (!$response instanceof \Illuminate\Http\JsonResponse)
+        if (!$response instanceof \Illuminate\Http\JsonResponse) {
             $response->with('error', 'One or more fields is incorrect.');
+        }
         return $response;
     }
 
@@ -263,8 +267,9 @@ class Controller extends BaseController
         if (empty($this->input)) {
             $this->input = request()->except('_token');
 
-            if ($this->injectUserId)
+            if ($this->injectUserId) {
                 $this->input['user_id'] = Auth::user()->id;
+            }
         }
         $this->sanitize();
         request()->replace($this->input); // @todo IS THIS NECESSARY?
@@ -293,13 +298,15 @@ class Controller extends BaseController
         // Check for previous errors
         if ($this->hasPreValidationErrors()) {
             $validator = Validator::make([], []);
-            foreach ($this->errors as $field => $error)
+            foreach ($this->errors as $field => $error) {
                 $validator->errors()->add($field, $error);
+            }
             $this->throwValidationException($request, $validator);
         }
 
-        if ($this->injectUserId && 'index' !== $this->method)
+        if ($this->injectUserId && 'index' !== $this->method) {
             $rules['user_id'] = 'required|in:' . Auth::id();
+        }
 
         parent::validate($request, $rules, $messages, $customAttributes);
     }
