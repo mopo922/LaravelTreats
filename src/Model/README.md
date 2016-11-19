@@ -11,11 +11,14 @@ The base model provides bonus functionality that all of your ELoquent models can
 This feature allows you to send in an array of related model IDs as part of your
 normal input, and they will automatically be saved to the database pivot table.
 Just add a `protected $autofillRelationships` property to your model that represents
-an array of relationship method names:
+an array of relationship method names, and make sure the same values are in your
+`$fillable` array:
 
 ```php
 class MyModel extends Eloquent {
-    use \LaravelTreats\Model\Traits\HasCompositePrimaryKey;
+
+    /** @var array The attributes that are mass assignable. */
+    protected $fillable = ['name', 'users'];
 
     /** @var array $autofillRelationships List of many-to-many relationships that can be autofilled. */
     protected $autofillRelationships = ['users'];

@@ -30,7 +30,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
     public function setAttribute($key, $value)
     {
         if (in_array($key, $this->autofillRelationships)) {
-            $this->autofilledRelations[$key] = $value;
+            $this->autofilledRelations[camel_case($key)] = $value;
             return $this;
         } else {
             return parent::setAttribute($key, $value);
