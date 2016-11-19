@@ -165,7 +165,10 @@ class Controller extends BaseController
         // Create
         $model = new $class($this->input);
         return $model->save()
-            ? ['success' => ucfirst($this->readableResourceType()) . ' created successfully.']
+            ? [
+                'success' => ucfirst($this->readableResourceType()) . ' created successfully.',
+                'model' => $model->toArray(),
+            ]
             : ['error' => 'There was a problem saving the ' . $this->readableResourceType() . '.'];
     }
 
