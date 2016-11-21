@@ -46,7 +46,7 @@ trait HasCompositePrimaryKey
         $me = new self;
         $query = $me->newQuery();
         foreach ($me->getKeyName() as $key) {
-            $query->where($key, '=', $id[$key]);
+            $query->where($key, '=', $ids[$key]);
         }
         return $query->first($columns);
     }
