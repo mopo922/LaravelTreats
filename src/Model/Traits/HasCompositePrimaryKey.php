@@ -2,6 +2,7 @@
 
 namespace LaravelTreats\Model\Traits;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasCompositePrimaryKey
