@@ -2,11 +2,11 @@
 
 namespace LaravelTreats\Controller\Api;
 
+use Auth;
+use Validator;
 use LaravelTreats\Controller\Controller as BaseController;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Auth;
 
 class Controller extends BaseController
 {
