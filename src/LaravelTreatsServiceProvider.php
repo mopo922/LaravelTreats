@@ -2,6 +2,7 @@
 
 namespace LaravelTreats;
 
+use Blade;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelTreatsServiceProvider extends ServiceProvider
@@ -28,6 +29,15 @@ class LaravelTreatsServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-treats'),
             __DIR__ . '/../resources/assets/less' => resource_path('assets/less'),
         ]);
+
+        /*
+         * Custom Blade directives
+         */
+
+        // Prints HTML for a glyphicon
+        Blade::directive('glyphicon', function($expression) {
+            return '<?php echo \'<span class="glyphicon glyphicon-\' . ' . $expression . ' . \'"></span>\'; ?>';
+        });
     }
 
     /** Register the application services. */

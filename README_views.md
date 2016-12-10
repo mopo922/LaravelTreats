@@ -201,3 +201,13 @@ tags or a modal template, you can add those to your Blade view script in a
     <div class="modal-backdrop hide"></div>
 @endsection
 ```
+
+## Custom Blade Directives
+
+## @glyphicon
+
+You can include a quick [glyphicon](http://getbootstrap.com/components/#glyphicons) with the `@glyphicon` directive:
+
+```php
+@glyphicon('plus-sign')
+```
