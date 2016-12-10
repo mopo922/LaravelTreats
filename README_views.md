@@ -18,6 +18,18 @@ Blade view scripts, and define your page content in a `content` section:
 @endsection
 ```
 
+If you'd simply like a "blank" HTML template with the `<head>` section already
+filled out but no navigation or footer, extend the `web` layout instead and put
+your page content in an `html-body` section:
+
+```php
+@extends('LaraveltTreats::layout.web')
+
+@section('html-body')
+    Hello World!
+@endsection
+```
+
 ### Styling
 
 A default set of CSS rules is included in LESS form. You'll need to compile the LESS
@@ -30,15 +42,17 @@ Once you've run `php artisan vendor:publish` you should have a new config file a
 `config/laravel-treats.php` and a directory of translation files at
 `resources/lang/vendor/laravel-treats/`.
 
-### Site Name/Title and Domain
+### Site Name/Title, Description, and Domain
 
 Open `resources/lang/vendor/laravel-treats/en/layout.php` to define your site's
-name (appears in places like the HTML &lt;title&gt; tag and on the Terms and Privacy pages)
-and domain (used primarily in the Terms and Privacy pages).
+name (appears in places like the HTML &lt;title&gt; tag and on the Terms and Privacy pages),
+description (content for the &lt;meta name="description"&gt; tag), and domain
+(used primarily in the Terms and Privacy pages).
 
 ```php
 'site' => [
     'name' => 'My Site',
+    'description' => 'A cool site designed by me.',
     'domain' => env('APP_DOMAIN', 'example.com'),
 ],
 ```

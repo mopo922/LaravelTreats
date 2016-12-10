@@ -50,6 +50,7 @@ return [
     // Site info
     'site' => [
         'name' => 'My Site',
+        'description' => 'A cool site designed by me.',
         'domain' => env('APP_DOMAIN', 'example.com'),
     ],
 
