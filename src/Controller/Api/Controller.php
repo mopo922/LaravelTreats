@@ -62,8 +62,8 @@ class Controller extends BaseController
                 abort(500, 'Bad API response data.');
             }
 
-            // Return JSON for AJAX requests
-            if (request()->ajax()) {
+            // Return JSON for AJAX and GET requests
+            if (request()->ajax() || 'index' === $method || 'show' === $method) {
                 $response = response()->json($result);
 
             // Return redirect-back and flash data for normal requests.
