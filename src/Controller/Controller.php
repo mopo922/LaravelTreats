@@ -101,6 +101,8 @@ class Controller extends BaseController
                 'action' => $this->action,
             ]);
 
+        }
+        if (!empty($this->modules)) {
             $this->layout->modules = $this->modules;
         }
     }
