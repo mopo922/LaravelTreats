@@ -69,6 +69,37 @@ header {
 }
 
 /**
+ * Mobile Nav
+ */
+@media screen and (max-width: @screen-sm-min) {
+    .nav {
+        > li {
+            > .dropdown-toggle {
+                display: none;
+            }
+            > .dropdown-menu {
+                display: block;
+                position: relative;
+                width: 100%;
+                background-color: transparent;
+                box-shadow: none;
+
+                > li {
+                    > a {
+                        color: @white;
+
+                        &:hover,
+                        &:focus {
+                            background-color: darken(@brand-primary, 10%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
  * Modal
  */
 .modal {
