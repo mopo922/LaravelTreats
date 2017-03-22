@@ -41,7 +41,7 @@ class MyModel extends Eloquent {
     /**
      * The primary key of the table.
      *
-     * @var string
+     * @var array
      */
     protected $primaryKey = ['key1', 'key2'];
 
