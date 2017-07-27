@@ -139,7 +139,7 @@ class Controller extends BaseController
             $query->$where($key, $value);
         }
 
-        return $query->first();
+        return $query->get();
     }
 
     /**
