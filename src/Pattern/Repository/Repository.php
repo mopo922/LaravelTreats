@@ -268,7 +268,7 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
         if (!$this->skipCriteria) {
             foreach ($this->getCriteria() as $criteria) {
                 if ($criteria instanceof _CriteriaInterface) {
-                    $this->model = $criteria->apply($this->model, $this);
+                    $this->model = $criteria->apply($this->model);
                 }
             }
         }
