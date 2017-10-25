@@ -56,6 +56,16 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
     abstract protected function validationRules();
 
     /**
+     * Child classes can add criteria for all SELECT queries.
+     *
+     * @return $this
+     */
+    protected function addSelectCriteria()
+    {
+        return $this;
+    }
+
+    /**
      * Generate an instance of the model.
      *
      * @return Illuminate\Database\Eloquent\Model
@@ -97,6 +107,7 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
      */
     public function all(array $columns = ['*'])
     {
+        $this->addSelectCriteria();
         $this->applyCriteria();
 
         foreach (request()->query() as $key => $value) {
@@ -117,6 +128,7 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
      */
     public function paginate($perPage = 15, $columns = array('*'))
     {
+        $this->addSelectCriteria();
         $this->applyCriteria();
 
         return $this->model->paginate($perPage, $columns);
@@ -174,6 +186,7 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
      */
     public function find($id, array $columns = ['*'])
     {
+        $this->addSelectCriteria();
         $this->applyCriteria();
 
         return $this->model->find($id, $columns);
@@ -189,6 +202,7 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
      */
     public function findBy(string $attribute, $value, array $columns = ['*'])
     {
+        $this->addSelectCriteria();
         $this->applyCriteria();
 
         return $this->model->where($attribute, '=', $value)->first($columns);
@@ -266,7 +280,7 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
         if (!$this->skipCriteria) {
             foreach ($this->getCriteria() as $criteria) {
                 if ($criteria instanceof _CriteriaInterface) {
-                    $this->model = $criteria->apply($this->model);
+                    $this->model = $criteria->apply($this->model, $this);
                 }
             }
         }
