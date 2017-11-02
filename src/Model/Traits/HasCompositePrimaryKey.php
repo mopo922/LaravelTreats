@@ -4,6 +4,7 @@ namespace LaravelTreats\Model\Traits;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasCompositePrimaryKey
 {
@@ -20,8 +21,9 @@ trait HasCompositePrimaryKey
     /**
      * Set the keys for a save update query.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder $query
+     * @return Builder
+     * @throws Exception
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
@@ -38,8 +40,8 @@ trait HasCompositePrimaryKey
     /**
      * Execute a query for a single record by ID.
      *
-     * @param  array  $ids Array of keys, like [column => value].
-     * @param  array  $columns
+     * @param  array $ids Array of keys, like [column => value].
+     * @param  array $columns
      * @return mixed|static
      */
     public static function find($ids, $columns = ['*'])
@@ -49,6 +51,36 @@ trait HasCompositePrimaryKey
         foreach ($me->getKeyName() as $key) {
             $query->where($key, '=', $ids[$key]);
         }
+
         return $query->first($columns);
+    }
+
+    /**
+     * Execute a refresh for a single record.
+     *
+     * @return Model
+     */
+    public function refresh()
+    {
+        if (!$this->exists) {
+            return $this;
+        }
+
+        $this->load(array_keys($this->relations));
+
+        $me = new self;
+        $query = $me->newQuery();
+
+        //make a "where" query with all the set primary keys to find this instance of the model
+        foreach ($me->getKeyName() as $key) {
+            $value = $this->getAttribute($key);
+            if (isset($value)) {
+                $query->where($key, '=', $value);
+            }
+        }
+        $model = $query->first();
+        $this->setRawAttributes($model->attributes);
+
+        return $this;
     }
 }
