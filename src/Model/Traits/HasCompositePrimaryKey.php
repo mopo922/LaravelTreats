@@ -56,31 +56,38 @@ trait HasCompositePrimaryKey
     }
 
     /**
-     * Execute a refresh for a single record.
+     * Get the value of the model's primary key.
      *
-     * @return Model
+     * @return array
      */
-    public function refresh()
+    public function getKey()
     {
-        if (!$this->exists) {
-            return $this;
+        $primary_keys_keys = $this->getKeyName();
+        $primary_keys_values = [];
+        foreach ($primary_keys_keys as $key) {
+            $primary_keys_values[$key] = $this->getAttribute($key);
+        }
+        return $primary_keys_values;
+    }
+
+    /**
+     * Find a model by its primary key or throw an exception.
+     *
+     * @param  array  $id
+     * @param  array  $columns
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public function findOrFail($id, $columns = ['*'])
+    {
+        $result = $this->find($id, $columns);
+        if (! is_null($result)) {
+            return $result;
         }
 
-        $this->load(array_keys($this->relations));
-
-        $me = new self;
-        $query = $me->newQuery();
-
-        //make a "where" query with all the set primary keys to find this instance of the model
-        foreach ($me->getKeyName() as $key) {
-            $value = $this->getAttribute($key);
-            if (isset($value)) {
-                $query->where($key, '=', $value);
-            }
-        }
-        $model = $query->first();
-        $this->setRawAttributes($model->attributes);
-
-        return $this;
+        throw (new ModelNotFoundException)->setModel(
+            get_class($this->model), $id
+        );
     }
 }
