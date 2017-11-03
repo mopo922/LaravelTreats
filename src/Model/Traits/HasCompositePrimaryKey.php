@@ -21,8 +21,8 @@ trait HasCompositePrimaryKey
     /**
      * Set the keys for a save update query.
      *
-     * @param  Builder $query
-     * @return Builder
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      * @throws Exception
      */
     protected function setKeysForSaveQuery(Builder $query)
