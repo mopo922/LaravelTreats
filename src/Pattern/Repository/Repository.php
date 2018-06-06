@@ -111,9 +111,13 @@ abstract class Repository implements _RepositoryInterface, _HasCriteriaInterface
         $this->applyCriteria();
 
         foreach (request()->query() as $key => $value) {
-            $this->model = is_array($value)
-                ? $this->model->whereIn($key, $value)
-                : $this->model->where($key, $value);
+            if ($key === 'with_trashed' && $value) {
+                $this->model = $this->model->withTrashed();
+            } else if (is_array($value)) {
+                $this->model = $this->model->whereIn($key, $value);
+            } else {
+                $this->model = $this->model->where($key, $value);
+            }
         }
 
         return $this->model->get($columns);
