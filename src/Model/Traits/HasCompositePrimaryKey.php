@@ -14,9 +14,23 @@ trait HasCompositePrimaryKey
      */
     public function getIncrementing()
     {
-        return false;
+        return (is_array($this->getKeyName()))?$this->incrementing:false;
     }
+    /**
+     * Returning the key names for the model
+     *
+     * @return string[]
+     */
+    public function getKeyNames(){
+        $keys = $this->getKeyName();
 
+        if(!is_array($keys)){
+            if($keys)
+                $keys = [$keys];
+        }
+
+        return $keys;
+    }
     /**
      * Get the value of the model's primary key.
      *
@@ -26,7 +40,7 @@ trait HasCompositePrimaryKey
     {
         $attributes = [];
 
-        foreach ($this->getKeyName() as $key) {
+        foreach ($this->getKeyNames() as $key) {
             $attributes[$key] = $this->getAttribute($key);
         }
 
@@ -41,7 +55,7 @@ trait HasCompositePrimaryKey
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
-        foreach ($this->getKeyName() as $key) {
+        foreach ($this->getKeyNames() as $key) {
             if (isset($this->$key))
                 $query->where($key, '=', $this->$key);
             else
@@ -63,7 +77,7 @@ trait HasCompositePrimaryKey
         $me = new self;
         $query = $me->newQuery();
 
-        foreach ($me->getKeyName() as $key) {
+        foreach ($me->getKeyNames() as $key) {
             $query->where($key, '=', $ids[$key]);
         }
 
