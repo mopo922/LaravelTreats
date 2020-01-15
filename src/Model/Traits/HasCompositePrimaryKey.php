@@ -111,4 +111,21 @@ trait HasCompositePrimaryKey
 
         return $this;
     }
+
+    /**
+     * Reload a fresh model instance from the database.
+     *
+     * @param  array|string  $with
+     * @return static|null
+     */
+    public function fresh($with = []) {
+        if (!$this->exists) {
+            return;
+        }
+
+        return static::newQueryWithoutScopes()
+            ->with(is_string($with) ? func_get_args(): $with)
+            ->where($this->getKey())
+            ->first();
+    }
 }
