@@ -29,7 +29,7 @@ class MyModel extends Eloquent {
 
 ## Traits
 
-### LaravelTreats\Model\Traits\HasCompositPrimaryKey
+### LaravelTreats\Model\Traits\HasCompositePrimaryKey
 
 This PHP trait can be used to adapt any Eloquent model to handle a composite PK.
 Simply add the following `use` statement at the top of your model:
