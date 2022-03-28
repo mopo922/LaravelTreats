@@ -2,6 +2,9 @@
 
 A collection of goodies for Laravel 5.
 
+| :exclamation:  This project is no longer maintained.   |
+|--------------------------------------------------------|
+
 ## Installation
 
 Add this to your project's composer.json file:
