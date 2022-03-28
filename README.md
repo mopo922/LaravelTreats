@@ -2,8 +2,8 @@
 
 A collection of goodies for Laravel 5.
 
-| :exclamation:  This project is no longer maintained.   |
-|--------------------------------------------------------|
+| :exclamation:  This project is no longer maintained.  :exclamation: |
+|---------------------------------------------------------------------|
 
 ## Installation
 
