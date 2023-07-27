@@ -38,14 +38,21 @@ trait HasCompositePrimaryKey
      *
      * @param  \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
+	 * 
+	 * @throws \Exception
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
         foreach ($this->getKeyName() as $key) {
-            if (isset($this->$key))
-                $query->where($key, '=', $this->$key);
-            else
-                throw new Exception(__METHOD__ . 'Missing part of the primary key: ' . $key);
+            if (isset($this->original[$key])) {
+            	// keyed based on original value, allow for changing primary key on save
+				$query->where($key, '=', $this->original[$key]);
+			} else if (isset($this->attributes[$key])) {
+				// keyed based on original value, allow for changing primary key on save
+				$query->where($key, '=', $this->attributes[$key]);
+			} else {
+				throw new Exception(__METHOD__.'Missing part of the primary key: '.$key);
+			}
         }
 
         return $query;
@@ -60,7 +67,7 @@ trait HasCompositePrimaryKey
      */
     public static function find($ids, $columns = ['*'])
     {
-        $me = new self;
+        $me = new static;
         $query = $me->newQuery();
 
         foreach ($me->getKeyName() as $key) {
@@ -81,7 +88,7 @@ trait HasCompositePrimaryKey
      */
     public static function findOrFail($ids, $columns = ['*'])
     {
-        $result = self::find($ids, $columns);
+        $result = static::find($ids, $columns);
 
         if (!is_null($result)) {
             return $result;
